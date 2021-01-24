@@ -10,8 +10,6 @@ class talk_params:
     self.force = False # if True, forces erasure of pre-parsed .json files
     #self.chunk_size=2^15 # splits large dcouments into chunks to avoid parser overflows TODO
 
-    self.ranker='hits' # picks centrality algorithm
-
     # content extraction related
     self.compounds = True # aggregates compounds
     self.svo_edges = True # includes SVO edges in text graph

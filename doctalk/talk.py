@@ -16,45 +16,6 @@ from .sim import *
 from .refiner import refine, ask_bert
 from .vis import pshow,gshow
 
-
-
-def pagerank(g) :
-  return nx.pagerank(g)
-
-def closeness(g) :
-  return nx.closeness_centrality(g)
-
-def betweenness(g) :
-  return nx.betweenness_centrality(g)
-
-def current_flow(g) :
-  u=g.to_undirected()
-  return nx.current_flow_betweenness_centrality(u)
-
-def hits(g) :
-  (hubs,auths)=nx.hits(g)
-  ranks=dict()
-  for x in g.nodes():
-    if isinstance(x,int) :
-      ranks[x]=hubs[x]
-    else :
-      ranks[x]=auths[x]
-  #return hubs
-  #return auths
-  return ranks
-
-rankers={
-  'hits':hits,
-  'pagerank':pagerank,
-  'closeness':closeness,
-  'betweenness':betweenness,
-  'current_flow':current_flow
-  }
-
-def rank_with(fname,g) :
-  f = rankers[fname]
-  return f(g)
-
 client = NLPclient()
 
 def my_path() :
@@ -431,10 +392,7 @@ def answer_quest(q,talker) :
   best = []
   if talker.params.pers and talker.params.with_answerer:
     d = {x: r for x, r in answerer.pr.items() if good_word(x)}
-
-    if talker.params.ranker=='pagerank':
-       talker.pr = nx.pagerank(talker.g, personalization=d)
-
+    talker.pr = nx.pagerank(talker.g, personalization=d)
 
   for (id, shared) in matches.items():
     sent = sent_data[id][SENT]
@@ -1074,18 +1032,13 @@ class Talker :
         else:
           g.add_edge(o, s)
 
-    if personalization == None and self.params.pers_idf and self.params.ranker=='pagerank':
+    if personalization == None and self.params.pers_idf :
       personalization=self.pers_from_freq(get_freqs())
-      pr = nx.pagerank(g, personalization=personalization)
-    else:
-      pr = rank_with(self.params.ranker,g)
 
-
-
+    pr = nx.pagerank(g, personalization=personalization)
     if self.params.use_line_graph and g.number_of_edges()<20000 :
         lg=nx.line_graph(g)
-        #lpr= nx.pagerank(lg)
-        lpr=rank_with(self.params.ranker,lg)
+        lpr= nx.pagerank(lg)
         for xy,r in lpr.items() :
           x,y=xy
           if isinstance(x,str) and isinstance(y,str):
@@ -1260,8 +1213,7 @@ class Talker :
     size = self.params.subgraph_size
     show = self.params.show_pics
     if size > 0:
-      #pr = nx.pagerank(g)
-      pr=rank_with(self.params.ranker,g)
+      pr = nx.pagerank(g)
       best = set(take(size, [x[0] for x in rank_sort(pr)]))
       g = g.subgraph(best)
     fname = file_name[:-4] + "_svo.gv"

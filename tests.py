@@ -1,7 +1,7 @@
 import glob
 import os
 from doctalk.params import talk_params
-from doctalk.talk import *
+from doctalk.talkr import *
 from doctalk.think import *
 from doctalk.vis import *
 from doctalk.api import *
@@ -175,6 +175,9 @@ def t1() :
     fname = 'examples/bfr'
     reason_with(fname, query=True)
 
+def c_test():
+  fname = 'examples/chinese_edison'
+  reason_with(fname, query=True)
 
 def t0():
   fname = 'examples/bfr'
@@ -398,12 +401,12 @@ if __name__== "__main__" :
   #t12()
   #tftest()
   #otest()
+  #t0()
   #otest()
   #api_test()
   #clean_text_file('examples/peirce.txt')
   #clean_text_file('examples/cybok.txt')
   #tt2()
-  #t0()
   pass
 
 
