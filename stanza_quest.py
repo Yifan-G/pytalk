@@ -356,10 +356,7 @@ def digest(stname) :
 
       d=(tuple(sent),tuple(lemma),tuple(tag),tuple(ner),tuple(deps),tuple(ies))
       sent_data.append(d)    
-  print("sent_data")
-  print(sent_data)
-  print("l2occ")
-  print(l2occ)
+
  
 
 
